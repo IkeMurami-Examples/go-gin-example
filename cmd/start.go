@@ -1,13 +1,15 @@
 /*
 Copyright © 2022 Ike Murami murami.ike@gmail.com
-
 */
 package cmd
 
 import (
-	"fmt"
+	"context"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+
+	ginserver "github.com/IkeMurami-Examples/go-gin-example/pkg/cmd"
 )
 
 // startCmd represents the start command
@@ -21,7 +23,15 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("start called")
+
+		debugMode := viper.GetBool("debug")
+		ctx := context.Background()
+		if debugMode {
+
+		}
+		if err := ginserver.StartServer(ctx); err != nil {
+			// Couldn't start the gin-example server
+		}
 	},
 }
 

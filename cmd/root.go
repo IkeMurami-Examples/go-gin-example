@@ -26,9 +26,16 @@ import (
 
 var cfgFile string
 
+const (
+	appName        string = "gin-example"
+	defaultCfgPath        = "/etc/" + appName
+	defaultCfgName        = appName + ".yaml"
+	usageMessage          = "config file (default is " + defaultCfgPath + "/" + defaultCfgName + ")"
+)
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "go-gin-example",
+	Use:   "gin-example",
 	Short: "A brief description of your application",
 	Long: `A longer description that spans multiple lines and likely contains
 examples and usage of using your application. For example:
@@ -57,11 +64,13 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.go-gin-example.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", usageMessage)
+	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Toggle debug mode")
+	_ = viper.BindPFlag("DEBUG", rootCmd.PersistentFlags().Lookup("debug"))
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -70,14 +79,10 @@ func initConfig() {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
-
 		// Search config in home directory with name ".go-gin-example" (without extension).
-		viper.AddConfigPath(home)
+		viper.AddConfigPath(defaultCfgPath)
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".go-gin-example")
+		viper.SetConfigName(appName)
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

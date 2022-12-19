@@ -18,6 +18,7 @@ Install basic dependencies:
 go get -u github.com/spf13/cobra@latest
 go get -u github.com/spf13/viper@latest
 go get -u github.com/gin-gonic/gin
+go get -u golang.org/x/sync/errgroup
 ```
 
 Install Cobra CLI (if it isn't installed):
@@ -47,3 +48,15 @@ mkdir config
 touch config/gin-example.yaml
 touch Dockerfile docker-compose.yml
 ```
+
+## Base Gin HTTP server
+
+```
+mkdir pkg
+mkdir pkg/cmd
+mkdir pkg/server
+touch pkg/server/server.go pkg/server/handler.go pkg/cmd/gin-example.go
+```
+
+Create that files and modify `cmd/root.go` and `cmd/start.go`.  
+Add support of yaml config (`build/config/gin-example.yaml`).
