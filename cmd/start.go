@@ -8,8 +8,10 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 
 	ginserver "github.com/IkeMurami-Examples/go-gin-example/pkg/cmd"
+	"github.com/IkeMurami-Examples/go-gin-example/pkg/utils"
 )
 
 // startCmd represents the start command
@@ -26,11 +28,21 @@ to quickly create a Cobra application.`,
 
 		debugMode := viper.GetBool("debug")
 		ctx := context.Background()
+		logger, _ := zap.NewProduction()
+		logger.Info("Start asman", zap.Bool("debug_mode", debugMode))
 		if debugMode {
+			logger, _ = zap.NewDevelopment()
 
+			for _, key := range viper.GetViper().AllKeys() {
+				logger.Debug("Config", zap.Any(key, viper.Get(key)))
+			}
 		}
+
+		// Add the Zap logger to context
+		ctx = utils.ContextWithLogger(ctx, logger)
+
 		if err := ginserver.StartServer(ctx); err != nil {
-			// Couldn't start the gin-example server
+			logger.Warn("Couldn't start the asman server", zap.Error(err))
 		}
 	},
 }

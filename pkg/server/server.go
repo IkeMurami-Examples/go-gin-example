@@ -5,15 +5,25 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/IkeMurami-Examples/go-gin-example/pkg/server/middleware"
+	"github.com/IkeMurami-Examples/go-gin-example/pkg/utils"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
+var logger *zap.Logger
+
 func NewServer(ctx context.Context, endpoint string, mux http.Handler) *http.Server {
+	// Logger
+	logger = utils.LoggerFromContext(ctx)
+
 	// Creates a router without any middleware by default
 	router := gin.New()
 
 	// Middlewares
 
+	// Logger middleware
+	router.Use(middleware.Logger(ctx))
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	router.Use(gin.Recovery())
 
@@ -45,7 +55,7 @@ func NewServer(ctx context.Context, endpoint string, mux http.Handler) *http.Ser
 
 	err := router.Run(endpoint)
 	if err != nil {
-
+		logger.Error("Gin Server is not started", zap.Error(err))
 		return nil
 	}
 

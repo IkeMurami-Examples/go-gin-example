@@ -10,16 +10,21 @@ import (
 	"time"
 
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/IkeMurami-Examples/go-gin-example/pkg/server"
+	"github.com/IkeMurami-Examples/go-gin-example/pkg/utils"
 )
 
 const (
 	serverShutdownTimeout = 5
 )
 
+var logger *zap.Logger
+
 func StartServer(ctx context.Context) error {
+	logger = utils.LoggerFromContext(ctx)
 	// Get Context with cancel
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -46,6 +51,7 @@ func StartServer(ctx context.Context) error {
 	case <-ctx.Done():
 		break
 	}
+	logger.Warn("received shutdown signal")
 
 	// Shutdown server
 	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(),
@@ -65,7 +71,12 @@ func startHTTPServer(ctx context.Context, group *errgroup.Group) (*http.Server, 
 	srv := server.NewServer(ctx, endpoint, mux)
 
 	group.Go(func() error {
+		logger.Info("HTTP Server serving", zap.String("endpoint", endpoint))
+
 		err := srv.ListenAndServe()
+		if err != nil {
+			logger.Error("HTTP Server stopped", zap.String("endpoint", endpoint), zap.Error(err))
+		}
 
 		return err
 	})

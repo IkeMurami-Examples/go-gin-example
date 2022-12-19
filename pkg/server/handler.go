@@ -7,7 +7,7 @@ import (
 )
 
 func HealhckeckHandler(ctx *gin.Context) {
-
+	logger.Info("Called /healthcheck")
 	ctx.JSON(http.StatusOK, gin.H{"status": "OK"})
 }
 

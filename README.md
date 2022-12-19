@@ -60,3 +60,15 @@ touch pkg/server/server.go pkg/server/handler.go pkg/cmd/gin-example.go
 
 Create that files and modify `cmd/root.go` and `cmd/start.go`.  
 Add support of yaml config (`build/config/gin-example.yaml`).
+
+## Add a logger middleware to the Gin HTTP server
+
+Install the Zap logger:
+
+```
+go get -u go.uber.org/zap
+mkdir pkg/utils
+touch pkg/utils/log.go
+mkdir pkg/server/middleware
+touch pkg/server/middleware/logger.go
+```
