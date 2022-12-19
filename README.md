@@ -38,3 +38,12 @@ So, we can start our program:
 ```
 go run main.go start
 ```
+
+## Deploy setting
+
+```
+mkdir build && cd build
+mkdir config
+touch config/gin-example.yaml
+touch Dockerfile docker-compose.yml
+```

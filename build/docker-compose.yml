@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  gin_example:
+    build:
+      context: ..
+      dockerfile: ./build/Dockerfile
+    container_name: gin-example
+    restart: always
+    ports:
+      - 8080:8080
+    command: "start"
+    volumes:
+      - ./config/:/etc/gin-example:ro
