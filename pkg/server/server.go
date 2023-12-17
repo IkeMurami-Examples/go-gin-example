@@ -30,8 +30,12 @@ func NewServer(ctx context.Context, endpoint string, mux http.Handler) *http.Ser
 	// Non authorized
 	root := router.Group("/")
 	{
+		// HealthCheck
 		root.GET("/healthcheck", HealhckeckHandler)
 
+		// GraphQL endpoint + playground
+
+		// API
 		api := router.Group("/api")
 		{
 			// Authorized

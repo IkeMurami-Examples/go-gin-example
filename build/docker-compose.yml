@@ -11,4 +11,4 @@ services:
       - 8080:8080
     command: "start"
     volumes:
-      - ./config/:/etc/gin-example:ro
+      - ../configs/:/etc/gin-example:ro

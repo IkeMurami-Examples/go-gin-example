@@ -7,6 +7,7 @@ WORKDIR /go/src/gin-example
 COPY . .
 
 RUN go mod vendor
+RUN go generate ./...
 RUN go build -a -o /bin/gin-example ./main.go
 
 FROM alpine AS runner
